@@ -9,4 +9,4 @@
 
 * 💻 - Aplicación optimizada y disponible para descargar en Windows.
 
-<img width="908" height="555" alt="image" src="https://github.com/user-attachments/assets/7d36d8b9-a0ef-4f50-8506-1add1338be60" />
+<img width="908" height="556" alt="image" src="https://github.com/user-attachments/assets/b9e44054-8731-46ba-9f3f-6fdd35ccea8f" />
