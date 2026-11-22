@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <p align="center">
   <img src="img/banner.webp" alt="OniRP" width="360">
 </p>
@@ -158,4 +157,3 @@ El cfg se escribe en `garrysmod/cfg/horizonlauncher.cfg` con: `gmod_mcore_test 1
 <p align="center">
   <a href="https://github.com/x04000/OniRP-Launcher/releases/latest"><b>Descargar el launcher</b></a> · <a href="https://discord.gg/jse95YYwAZ">Discord de OniRP</a>
 </p>
->>>>>>> d2ca5c95ebec3c7e0ac9af44e85d69dfb217f0f6
