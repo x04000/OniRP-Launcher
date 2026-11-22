@@ -1,0 +1,348 @@
+/*
+  Misma paleta y tipografía que el launcher (src/index.css):
+  negro rojizo de fondo, rojo #e0313e como único acento y marfil para "Actualizar".
+*/
+:root {
+    --bg: #0a0305;
+    --bg-2: #120709;
+    --panel: #170b0e;
+    /* El rojo del launcher (#e0313e) un pelo más oscuro para que el texto blanco pase AA (4.65:1).
+       Hover y pulsado oscurecen en vez de aclarar por el mismo motivo. */
+    --accent: #dc2f3c;
+    --accent-hover: #c92633;
+    --accent-press: #b81f2c;
+    --ivory: #f1e6e3;
+    --text: #f5eded;
+    --muted: rgba(245, 237, 237, 0.68);
+    --hair: rgba(255, 255, 255, 0.12);
+    --font: 'Segoe UI Variable Text', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    --font-display: 'Segoe UI Variable Display', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    --mono: 'Cascadia Mono', Consolas, 'SF Mono', monospace;
+    --wrap: 1120px;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; scroll-padding-top: 72px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+}
+
+img { max-width: 100%; height: auto; display: block; }
+h1, h2, h3 { font-family: var(--font-display); line-height: 1.15; margin: 0; }
+p { margin: 0; }
+a { color: inherit; }
+code { font-family: var(--mono); font-size: .92em; background: rgba(255, 255, 255, 0.07); padding: 1px 6px; border-radius: 6px; }
+
+/* Afordancias comunes */
+a[href], button, label[for], .setRow { cursor: pointer; }
+button:disabled { cursor: not-allowed; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--ivory); outline-offset: 3px; border-radius: 6px; }
+
+.skip {
+    position: absolute; left: 12px; top: -60px; z-index: 100;
+    padding: 10px 16px; border-radius: 10px; background: var(--ivory); color: #3a0a10; font-weight: 600; text-decoration: none;
+}
+.skip:focus { top: 12px; }
+
+.wrap { max-width: var(--wrap); margin: 0 auto; padding: 0 28px; }
+
+.secTitle { font-size: clamp(30px, 4vw, 44px); font-weight: 700; letter-spacing: -0.02em; }
+
+/* ───────── Barra superior ───────── */
+.topbar {
+    position: sticky; top: 0; z-index: 30;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    height: 64px; padding: 0 28px;
+    background: #090406;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-size: 15px; min-height: 44px; }
+.brand img { width: 36px; height: 36px; }
+.brand b { font-weight: 600; color: var(--muted); }
+
+.topnav { display: flex; gap: 4px; }
+.topnav a {
+    display: inline-flex; align-items: center; min-height: 44px; padding: 0 14px;
+    border-radius: 999px; text-decoration: none; font-size: 14px; color: var(--muted);
+    transition: color .2s, background .2s;
+}
+.topnav a:hover { color: #fff; background: rgba(255, 255, 255, 0.08); }
+.topnav a:active { background: rgba(255, 255, 255, 0.14); }
+
+/* ───────── Botón principal (el mismo del launcher) ───────── */
+.mainBtn {
+    display: inline-flex; align-items: center; gap: 14px;
+    height: 58px; padding: 0 30px 0 10px;
+    background: var(--accent); border-radius: 999px;
+    color: #fff; font-size: 17px; font-weight: 600; text-decoration: none;
+    transition: background .2s, transform .15s;
+}
+.mainBtn:hover { background: var(--accent-hover); }
+.mainBtn:active { background: var(--accent-press); transform: scale(.97); }
+.mbIcon {
+    width: 38px; height: 38px; flex: none; display: grid; place-items: center;
+    border-radius: 50%; background: rgba(0, 0, 0, 0.82);
+}
+
+.dlMeta { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 13px; color: var(--muted); }
+.dlMeta span + span::before { content: '·'; margin-right: 14px; color: rgba(245, 237, 237, 0.35); }
+.ver[data-state="loading"] { opacity: .75; }
+
+/* ───────── Portada ───────── */
+.hero {
+    position: relative; overflow: hidden; isolation: isolate;
+    min-height: calc(100svh - 64px);
+    display: grid; align-items: center;
+    padding: 56px 0 96px;
+}
+/* Igual que en el launcher: se amplía para recortar el marco rojo del arte */
+.heroBg {
+    position: absolute; inset: 0; width: 100%; height: 100%; z-index: -3;
+    object-fit: cover; transform: scale(1.22); transform-origin: 60% 50%;
+}
+.heroShade {
+    position: absolute; inset: 0; z-index: -2;
+    background:
+        linear-gradient(0deg, var(--bg) 0%, rgba(10, 3, 5, 0) 30%),
+        linear-gradient(90deg, rgba(8, 3, 5, 0.85) 0%, rgba(8, 3, 5, 0.35) 60%, rgba(8, 3, 5, 0.15) 100%);
+}
+.petals { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+
+.heroInner {
+    width: 100%; max-width: 1280px; margin: 0 auto; padding: 0 28px;
+    display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 56px; align-items: center;
+}
+.heroCopy { display: flex; flex-direction: column; gap: 22px; }
+.hero h1 { font-size: clamp(38px, 5.4vw, 66px); font-weight: 700; letter-spacing: -0.03em; }
+.lead { font-size: 18px; color: var(--muted); max-width: 30em; }
+.ctaRow { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; margin-top: 8px; }
+
+/* La captura flota como una ventana de escritorio: la sombra marca que está por encima del fondo */
+.heroShot { margin: 0; }
+.heroShot img {
+    width: 100%; border-radius: 14px; border: 1px solid var(--hair);
+    box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(0, 0, 0, 0.6);
+}
+
+.petalToggle {
+    position: absolute; right: 20px; bottom: 20px;
+    display: inline-flex; align-items: center; gap: 8px;
+    min-height: 44px; padding: 0 16px;
+    border-radius: 999px; border: 1px solid var(--hair);
+    background: rgba(10, 3, 5, 0.7); font-size: 13px; color: var(--muted);
+    transition: color .2s, background .2s;
+}
+.petalToggle:hover { color: #fff; background: rgba(255, 255, 255, 0.1); }
+.petalToggle:active { background: rgba(255, 255, 255, 0.16); }
+.petalToggle .icoPlay { display: none; }
+.petalToggle[aria-pressed="true"] .icoPlay { display: block; }
+.petalToggle[aria-pressed="true"] .icoPause { display: none; }
+.petalToggle[hidden] { display: none; }
+
+/* ───────── Funciones ───────── */
+.features { padding: 72px 0 40px; }
+.features .secTitle { margin-bottom: 56px; }
+.feat { padding: 56px 0; border-top: 1px solid rgba(255, 255, 255, 0.07); }
+.feat h3 { font-size: clamp(22px, 2.6vw, 30px); font-weight: 600; letter-spacing: -0.01em; }
+.featText { display: flex; flex-direction: column; gap: 14px; }
+.featText p { color: var(--muted); max-width: 34em; }
+.note { font-size: 14px; }
+
+/* 1 · Estados del botón: texto a la izquierda, escalera de botones a la derecha */
+.featButton { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 56px; align-items: start; }
+.states { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
+.states li { display: grid; grid-template-columns: 196px minmax(0, 1fr); gap: 18px; align-items: center; }
+.pill {
+    display: flex; align-items: center; gap: 12px;
+    height: 46px; padding: 0 20px 0 6px; border-radius: 999px;
+    background: var(--accent); color: #fff; font-weight: 600; font-size: 15px;
+}
+.pill .pi { width: 34px; height: 34px; flex: none; display: grid; place-items: center; border-radius: 50%; background: rgba(0, 0, 0, 0.82); }
+.pill--wait { background: rgba(255, 255, 255, 0.16); color: rgba(255, 255, 255, 0.85); }
+.pill--ivory { background: var(--ivory); color: #8e1622; }
+.pill--ivory .pi { color: #fff; }
+.stDesc { font-size: 15px; color: var(--muted); }
+.stDesc b { color: var(--text); font-weight: 600; }
+
+/* 2 · Steam: titular ancho y dos columnas de distinto peso */
+.featSteam h3 { max-width: 18em; margin-bottom: 28px; font-size: clamp(26px, 3.4vw, 40px); }
+.steamGrid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: 56px; }
+.steamLead { font-size: 19px; line-height: 1.55; }
+.ticks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+.ticks li { position: relative; padding-left: 26px; color: var(--muted); }
+/* Pétalo pequeño como viñeta: es la misma forma que cae en el launcher */
+.ticks li::before {
+    content: ''; position: absolute; left: 2px; top: .55em; width: 10px; height: 10px;
+    background: var(--accent); border-radius: 0 60% 0 60%; transform: rotate(-20deg);
+}
+
+/* 3 · Simulador de parámetros */
+.featArgs { display: flex; flex-direction: column; gap: 32px; }
+.argsDemo { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px; align-items: start; }
+.argsPanel {
+    padding: 8px 24px 20px; border-radius: 20px;
+    background: var(--panel); border: 1px solid var(--hair);
+}
+.setRow {
+    position: relative;
+    display: flex; justify-content: space-between; align-items: center; gap: 14px;
+    padding: 14px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+.setRow b { display: block; font-weight: 600; font-size: 15px; }
+.setRow small { display: block; margin-top: 2px; font-size: 12.5px; color: var(--muted); }
+/* El checkbox real sigue en la página (accesible por teclado), solo se oculta visualmente */
+.setRow input { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
+.switch { position: relative; flex: none; width: 44px; height: 24px; border-radius: 12px; background: rgba(255, 255, 255, 0.18); transition: background .2s; }
+.switch::after { content: ''; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: #fff; transition: transform .2s; }
+.setRow input:checked ~ .switch { background: var(--accent); }
+.setRow input:checked ~ .switch::after { transform: translateX(20px); }
+.setRow input:focus-visible ~ .switch { outline: 2px solid var(--ivory); outline-offset: 3px; }
+.setRow:hover .switch { box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.06); }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 12px 0 4px; }
+.chip {
+    min-width: 64px; min-height: 44px; padding: 0 14px; border-radius: 999px; font-size: 13px;
+    background: transparent; border: 1px solid var(--hair); transition: background .2s, border-color .2s;
+}
+.chip:hover:not(:disabled) { background: rgba(255, 255, 255, 0.08); }
+.chip:active:not(:disabled) { background: rgba(255, 255, 255, 0.14); }
+.chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+.chip:disabled { opacity: .4; }
+
+.cmd {
+    display: flex; flex-direction: column; gap: 14px;
+    padding: 24px; border-radius: 20px;
+    background: #050102; border: 1px solid rgba(224, 49, 62, 0.35);
+    position: sticky; top: 96px;
+}
+.cmdLabel { font-size: 13px; color: var(--muted); }
+/* Monoespaciada porque es literalmente una línea de comandos */
+.cmdLine { font-family: var(--mono); font-size: 15px; line-height: 1.9; word-break: break-word; }
+.cmdLine .exe { color: var(--muted); }
+.cmdLine .arg { color: var(--ivory); }
+.cmdLine .arg.new { animation: argIn .5s ease; }
+.cmdLine .ph { color: #ff8a93; }
+.cmdLine .arg, .cmdLine .ph { white-space: nowrap; }
+.cmdLine .none { color: var(--muted); font-family: var(--font); }
+@keyframes argIn { from { background: rgba(224, 49, 62, 0.35); } to { background: transparent; } }
+@media (prefers-reduced-motion: reduce) { .cmdLine .arg.new { animation: none; } }
+
+/* 4 · Extras: lista de definiciones en dos columnas */
+.extras {
+    margin: 0; padding: 56px 0 24px; border-top: 1px solid rgba(255, 255, 255, 0.07);
+    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px 56px;
+}
+.extras dt { font-weight: 600; font-size: 17px; margin-bottom: 4px; }
+.extras dd { margin: 0; color: var(--muted); }
+
+/* ───────── Capturas ───────── */
+.shots { padding: 72px 0; background: var(--bg-2); }
+.shots .secTitle { margin-bottom: 32px; }
+.stage { margin: 0; }
+.stage img { width: 100%; border-radius: 14px; border: 1px solid var(--hair); background: #000; }
+.stage figcaption { margin-top: 14px; color: var(--muted); font-size: 15px; min-height: 1.6em; }
+.thumbs { margin-top: 24px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.thumb {
+    display: flex; flex-direction: column; gap: 8px; padding: 0; text-align: left;
+    background: none; border: none; font-size: 14px; color: var(--muted);
+}
+.thumb img { border-radius: 10px; border: 2px solid transparent; opacity: .6; transition: opacity .2s, border-color .2s; }
+.thumb:hover img { opacity: .9; }
+.thumb:active img { opacity: 1; }
+.thumb[aria-pressed="true"] { color: var(--text); }
+.thumb[aria-pressed="true"] img { opacity: 1; border-color: var(--accent); }
+
+/* ───────── Instalar ───────── */
+.install { padding: 88px 0; }
+.installGrid { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 64px; align-items: start; }
+.steps { list-style: none; counter-reset: s; margin: 36px 0 0; padding: 0; display: flex; flex-direction: column; }
+.steps li {
+    counter-increment: s; position: relative;
+    padding: 0 0 28px 64px; border-left: 1px solid rgba(255, 255, 255, 0.1); margin-left: 19px;
+}
+.steps li:last-child { border-left-color: transparent; padding-bottom: 0; }
+.steps li::before {
+    content: counter(s); position: absolute; left: -20px; top: -4px;
+    width: 40px; height: 40px; display: grid; place-items: center; border-radius: 50%;
+    background: rgba(0, 0, 0, 0.82); border: 1px solid var(--hair);
+    font-family: var(--font-display); font-weight: 700; color: var(--ivory);
+}
+.steps li:last-child::before { background: var(--accent); border-color: var(--accent); color: #fff; }
+.steps h3 { font-size: 19px; font-weight: 600; margin-bottom: 4px; }
+.steps p { color: var(--muted); }
+
+.needs {
+    position: sticky; top: 96px;
+    padding: 28px; border-radius: 20px; background: var(--panel); border: 1px solid var(--hair);
+}
+.needs h3 { font-size: 19px; margin-bottom: 14px; }
+.needs ul { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; color: var(--muted); }
+
+/* ───────── Descarga final ───────── */
+.final {
+    display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: 40px;
+    max-width: var(--wrap); margin: 0 auto; padding: 40px 28px 96px;
+}
+.finalArt { width: 100%; max-width: 460px; justify-self: center; }
+.finalCopy { display: flex; flex-direction: column; align-items: flex-start; gap: 22px; }
+.finalCopy h2 { font-size: clamp(32px, 4.4vw, 52px); font-weight: 700; letter-spacing: -0.02em; }
+
+/* ───────── Pie ───────── */
+.foot {
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;
+    padding: 24px 28px; border-top: 1px solid rgba(255, 255, 255, 0.07);
+    font-size: 14px; color: var(--muted);
+}
+.socials { display: flex; gap: 2px; }
+.socials a {
+    width: 44px; height: 44px; display: grid; place-items: center; border-radius: 50%;
+    color: var(--muted); transition: color .2s, background .2s;
+}
+.socials a:hover { color: #fff; background: rgba(255, 255, 255, 0.1); }
+.socials a:active { background: rgba(255, 255, 255, 0.16); }
+
+/* ───────── Responsive ───────── */
+@media (max-width: 960px) {
+    .heroInner { grid-template-columns: 1fr; gap: 40px; }
+    .hero { min-height: 0; padding-top: 40px; }
+    .featButton, .steamGrid, .argsDemo, .installGrid { grid-template-columns: 1fr; gap: 32px; }
+    .needs { position: static; }
+    .final { grid-template-columns: 1fr; text-align: left; }
+    .finalArt { max-width: 320px; justify-self: start; }
+}
+
+@media (max-width: 640px) {
+    .wrap, .heroInner { padding: 0 20px; }
+    .topbar { padding: 0 12px 0 16px; }
+    .brand span { display: none; }
+    .topnav a { padding: 0 10px; }
+    .hero { padding-bottom: 88px; }
+    .lead { font-size: 17px; }
+    .mainBtn { width: 100%; }
+    .mbLabel { flex: 1; text-align: center; }
+    .states li { grid-template-columns: 1fr; gap: 6px; }
+    .pill { width: fit-content; min-width: 180px; }
+    .extras { grid-template-columns: 1fr; gap: 24px; }
+    .thumbs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .argsPanel { padding: 4px 16px 16px; }
+    /* En móvil el resultado va encima y se queda pegado bajo la barra mientras tocas los ajustes; la sombra lo separa del panel */
+    .cmd { order: -1; top: 72px; z-index: 2; padding: 12px 16px; gap: 6px; box-shadow: 0 16px 32px rgba(0, 0, 0, 0.75); }
+    .cmdLabel { font-size: 12px; }
+    .cmdLine { font-size: 13px; line-height: 1.75; }
+    .steps li { padding-left: 44px; }
+    .final { padding: 32px 20px 72px; }
+    .dlMeta { flex-direction: column; gap: 2px; }
+    .dlMeta span + span::before { content: none; }
+    .foot { flex-direction: column; align-items: flex-start; }
+}
